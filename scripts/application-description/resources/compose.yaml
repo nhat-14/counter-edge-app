@@ -1,0 +1,4 @@
+services:
+  main:
+    image: ghcr.io/nhat-14/edge-app:develop
+    container_name: nhat-test-edge-app
