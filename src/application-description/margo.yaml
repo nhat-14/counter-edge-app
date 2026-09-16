@@ -15,4 +15,4 @@ deploymentProfiles:
     components:
       - name: counter-app
         properties:
-          packageLocation: https://github.com/nhat-14/counter-edge-app/blob/main/src/compose.yaml
+          packageLocation: https://raw.githubusercontent.com/nhat-14/counter-edge-app/refs/heads/main/src/compose.yaml
