@@ -9,7 +9,7 @@
 # Global configuration
 REGISTRY="ghcr.io"
 IMAGE_NAME=counter-app
-IMAGE_TAG="v1.0.0"
+IMAGE_TAG="v2.0.0"
 MULTI_ARCH_BUILD="false"
 
 REGISTRY_TOKEN_NAME="nhat-14"
