@@ -15,9 +15,10 @@ print("Starting the program. If stopping, please press Ctrl+C")
 
 try:
     while True:
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")          # v1.0.0
+        now = datetime.datetime.now().strftime("%Y年%-m月%-d日 %H時%M分%S秒")   # v2.0.0
         print(f"Now: {now}")
-        time.sleep(10)
+        time.sleep(5)
 
 except KeyboardInterrupt:
     print("\nStopped")
