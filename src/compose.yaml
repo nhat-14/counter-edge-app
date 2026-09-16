@@ -1,0 +1,4 @@
+services:
+  main:
+    image: ghcr.io/nhat-14/counter-app:v1.0.0
+    container_name: counter-app

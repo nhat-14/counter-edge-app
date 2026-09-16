@@ -1,8 +1,24 @@
 #!/bin/bash
+#
+# Copyright (c) 2026 Duc Nhat Luong
+#
+# This file is based on and adapted from:
+# https://github.com/oomichi-melco/try-margo
+#
+# Original work:
+# Copyright (c) 2026 Kenichi Omichi
+#
+# Licensed under the MIT License.
+# See the LICENSE file in this repository for details.
 
-cd $(dirname "$0")
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${SCRIPT_DIR}/.."
 
-IMAGE_NAME=edge-app
+# Load configuration
+source "${SCRIPT_DIR}/config.sh"
+
+IMAGE_NAME=${IMAGE_NAME:-"my-image"}
 
 MULTI_ARCH_BUILD=${MULTI_ARCH_BUILD:-"false"}
 
@@ -19,10 +35,10 @@ podman rmi --force ${IMAGE_NAME}
 set -e
 
 if [ "${MULTI_ARCH_BUILD}" == "false" ]; then
-	podman build -t ${IMAGE_NAME} .
+	podman build -t ${IMAGE_NAME} -f src/Dockerfile .
 else
 	sudo podman run --rm --privileged docker.io/multiarch/qemu-user-static --reset -p yes
-	podman build --platform linux/amd64,linux/arm64 --format docker -t ${IMAGE_NAME} .
+	podman build --platform linux/amd64,linux/arm64 --format docker -t ${IMAGE_NAME} -f src/Dockerfile .
 fi
 
 set +x
