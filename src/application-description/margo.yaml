@@ -1,9 +1,9 @@
 apiVersion: margo.org/v1-alpha1
 kind: ApplicationDescription
-id: nhat-14-edge-app
+id: counter-app
 metadata:
-  name: edge app
-  description: A basic edge app inspired by oomichi-melco
+  name: counter app
+  description: A basic counter
   version: 1.0.0
   catalog:
     organization:
@@ -11,8 +11,8 @@ metadata:
         site: https://github.com/nhat-14
 deploymentProfiles:
   - type: compose
-    id: nhat-14-edge-app-compose
+    id: counter-app-compose
     components:
-      - name: edge-app-docker
+      - name: counter-app
         properties:
-          packageLocation: https://raw.githubusercontent.com/nhat-14/gh-actions-test/refs/heads/main/compose.yaml
+          packageLocation: https://github.com/nhat-14/counter-edge-app/blob/main/src/compose.yaml
