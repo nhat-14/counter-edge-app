@@ -18,8 +18,7 @@ cd "${SCRIPT_DIR}/.."
 # Load configuration
 source "${SCRIPT_DIR}/config.sh"
 
-IMAGE_NAME=${IMAGE_NAME:-"my-image"}
-CONTAINER_IMAGE=${CONTAINER_IMAGE:-"${IMAGE_NAME}:${IMAGE_TAG}"}
+IMAGE_REF="${IMAGE_NAME}:${IMAGE_TAG}"
 APP_PACKAGE_NAME=${APP_PACKAGE_NAME:-"counter-app-compose-app-package"}
 # HELM_IMAGE="edge-app-chart:1.0.0"
 
@@ -31,10 +30,10 @@ fi
 
 echo "Pushing container image to harbor.."
 set -ex
-docker pull ghcr.io/nhat-14/${CONTAINER_IMAGE}
-docker tag ghcr.io/nhat-14/${CONTAINER_IMAGE} harbor.machine:8443/library/${CONTAINER_IMAGE}
+docker pull "ghcr.io/nhat-14/${IMAGE_REF}"
+docker tag "ghcr.io/nhat-14/${IMAGE_REF}" "harbor.machine:8443/library/${IMAGE_REF}"
 docker login harbor.machine:8443 -u admin -p Harbor12345
-docker push harbor.machine:8443/library/${CONTAINER_IMAGE}
+docker push "harbor.machine:8443/library/${IMAGE_REF}"
 set +x
 
 # echo "Pushing helm chart to harbor.."
@@ -60,11 +59,20 @@ while IFS= read -r file; do
 done < <(find resources -type f 2>/dev/null)
 fi
 
-oras push harbor.machine:8443/library/${APP_PACKAGE_NAME}:latest \
+# oras push harbor.machine:8443/library/${APP_PACKAGE_NAME}:latest \
+#   --artifact-type "application/vnd.margo.app.v1+json" \
+#   --insecure \
+#   "${files[@]}"
+
+
+oras push harbor.machine:8443/library/${APP_PACKAGE_NAME}:${IMAGE_TAG} \
   --artifact-type "application/vnd.margo.app.v1+json" \
   --insecure \
   "${files[@]}"
-  
+
+oras tag harbor.machine:8443/library/${APP_PACKAGE_NAME}:${IMAGE_TAG} latest \
+  --insecure
+
 set +ex
 cd ~-
 
