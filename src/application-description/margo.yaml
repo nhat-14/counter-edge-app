@@ -2,9 +2,9 @@ apiVersion: margo.org/v1-alpha1
 kind: ApplicationDescription
 id: counter-app
 metadata:
-  name: counter app v1
+  name: counter app v2
   description: A basic counter
-  version: 1.0.0
+  version: 2.0.0
   catalog:
     organization:
       - name: nhat-14
@@ -15,4 +15,4 @@ deploymentProfiles:
     components:
       - name: counter-app
         properties:
-          packageLocation: https://raw.githubusercontent.com/nhat-14/counter-edge-app/refs/heads/main/src/compose-v1.yaml
+          packageLocation: https://raw.githubusercontent.com/nhat-14/counter-edge-app/refs/heads/main/src/compose-v2.yaml
