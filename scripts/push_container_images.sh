@@ -23,8 +23,12 @@ IMAGE_TAG=${IMAGE_TAG:-"develop"}
 REGISTRY=${REGISTRY:-"ghcr.io"}
 REGISTRY_TOKEN_NAME=${REGISTRY_TOKEN_NAME:-"your-github-acc"}
 REGISTRY_TOKEN_PASSWD=${REGISTRY_TOKEN_PASSWD:-""}
+MULTI_ARCH_BUILD=${MULTI_ARCH_BUILD:-"false"}
 
-echo $REGISTRY_TOKEN_NAME
+LOCAL_IMAGE_REF="${IMAGE_NAME}:${IMAGE_TAG}"
+NEW_REGISTRY_IMAGE="${REGISTRY}/${REGISTRY_TOKEN_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
+
+echo "${REGISTRY_TOKEN_NAME}"
 
 if [ "${REGISTRY}" == "" ]; then
 	echo "REGISTRY needs to be specified."
@@ -43,12 +47,15 @@ set -e
 podman login -u "${REGISTRY_TOKEN_NAME}" -p "${REGISTRY_TOKEN_PASSWD}" "${REGISTRY}"
 set +e
 
-NEW_REGISTRY_IMAGE="${REGISTRY}/${REGISTRY_TOKEN_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
-
 set -e
-echo "Pushing the image ${IMAGE_NAME}:${IMAGE_TAG}.."
-podman tag localhost/${IMAGE_NAME}:latest ${NEW_REGISTRY_IMAGE}
-podman push ${NEW_REGISTRY_IMAGE}
+if [ "${MULTI_ARCH_BUILD}" == "true" ]; then
+	echo "Pushing the multi-arch image ${LOCAL_IMAGE_REF} to ${NEW_REGISTRY_IMAGE}.."
+	podman manifest push --all "${LOCAL_IMAGE_REF}" "docker://${NEW_REGISTRY_IMAGE}"
+else
+	echo "Pushing the image ${LOCAL_IMAGE_REF} to ${NEW_REGISTRY_IMAGE}.."
+	podman tag "${LOCAL_IMAGE_REF}" "${NEW_REGISTRY_IMAGE}"
+	podman push "${NEW_REGISTRY_IMAGE}"
+fi
 set +e
 
 echo "Succeeded to push container images."

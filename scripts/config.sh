@@ -9,8 +9,8 @@
 # Global configuration
 REGISTRY="ghcr.io"
 IMAGE_NAME=counter-app
-IMAGE_TAG="v2.0.0"
-MULTI_ARCH_BUILD="false"
+IMAGE_TAG="v1.0.0"
+MULTI_ARCH_BUILD="true"
 
 REGISTRY_TOKEN_NAME="nhat-14"
 # REGISTRY_TOKEN_PASSWD="" # GitHub PAT for the ghcr.io registry

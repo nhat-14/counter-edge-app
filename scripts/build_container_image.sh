@@ -19,6 +19,8 @@ cd "${SCRIPT_DIR}/.."
 source "${SCRIPT_DIR}/config.sh"
 
 IMAGE_NAME=${IMAGE_NAME:-"my-image"}
+IMAGE_TAG=${IMAGE_TAG:-"latest"}
+LOCAL_IMAGE_REF="${IMAGE_NAME}:${IMAGE_TAG}"
 
 MULTI_ARCH_BUILD=${MULTI_ARCH_BUILD:-"false"}
 
@@ -31,14 +33,14 @@ if [ $? -ne 0 ]; then
 fi
 
 set +e
-podman rmi --force ${IMAGE_NAME}
+podman rmi --force "${LOCAL_IMAGE_REF}" "${IMAGE_NAME}"
 set -e
 
 if [ "${MULTI_ARCH_BUILD}" == "false" ]; then
-	podman build -t ${IMAGE_NAME} -f src/Dockerfile .
+	podman build -t "${LOCAL_IMAGE_REF}" -f src/Dockerfile .
 else
 	sudo podman run --rm --privileged docker.io/multiarch/qemu-user-static --reset -p yes
-	podman build --platform linux/amd64,linux/arm64 --format docker -t ${IMAGE_NAME} -f src/Dockerfile .
+	podman build --platform linux/amd64,linux/arm64 --manifest "${LOCAL_IMAGE_REF}" -f src/Dockerfile .
 fi
 
 set +x
